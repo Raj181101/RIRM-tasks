@@ -1,0 +1,97 @@
+{% extends 'inv/base.html' %}
+
+{% block body %}
+
+<style>
+    * {
+        box-sizing: border-box;
+      }
+      
+      /* Style the search field */
+      form.example input[type=text] {
+        padding: 10px;
+        font-size: 17px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+      }
+      
+      /* Style the submit button */
+      form.example button {
+        float: left;
+        width: 20%;
+        padding: 10px;
+        background: #2196F3;
+        color: white;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-left: none; /* Prevent double borders */
+        cursor: pointer;
+      }
+      
+      form.example button:hover {
+        background: #0b7dda;
+      }
+      
+      /* Clear floats */
+      form.example::after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+      
+</style>
+ <div>
+    <br>
+    <h4 style="text-align:center">Extracting Hyper Links</h4><hr>
+    <br>
+  </div> 
+  
+
+  <div class="container">
+    {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">
+        ×
+        </button>
+        <strong>{{message}}<strong>
+      </div>
+    {% endfor %}
+    {% endif %}
+
+    <form class="example" method="POST">
+        {% csrf_token %}
+        <input type="text" placeholder="Search.." name="website_link">
+        <button type="submit"><i class="fa fa-search"></i></button>
+      </form>
+      <br>
+<div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Links</th>
+      </tr>
+      
+    </thead>
+    
+    <tbody>
+      {% comment %} {% if links %} {% endcomment %}
+      {% for link in links %}
+      <tr>
+          <td>{{ forloop.counter }}</td>
+        <td>{{ link }}</td>
+      </tr>
+      
+      {% endfor %}
+      {% comment %} {% else %}
+      <h5 style="color:red">No Data found </h5>
+      {% endif %} {% endcomment %}
+  
+    </tbody>
+  </table> 
+</div>
+
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'inv/base.html' %}
+
+{% block body %}
+
+  <div class="add_buttons row">
+
+    <div class="button-group col-sm-6">
+      {% if request.user.is_authenticated %}
+      <a href="{% url 'add_student' %}" class="btn btn-primary btn-md btn-trim" role="button"> Add Students</a> &nbsp
+       
+      <a href="{% url 'add_student_academic' %}" class="btn btn-warning btn-md btn-pad" role="button"> Add Academics</a>
+      {% endif %}
+    </div>
+    <div class="button-group col-sm-3">
+      <form method="POST">
+        {% csrf_token %}
+  
+        <div class="form-group row">
+          {% comment %} <label for="id_{{ field.name }}" class="col-2 col-form-label">Search</label> {% endcomment %}
+          <div class="col-10">
+             <input class="form-control" type="text" placeholder="Search" name="search">
+          </div>
+        
+          <div class="col-sm-2">
+  
+            <button type="submit" class="btn btn-primary">Search</button>
+  
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+
+  <div>
+    <br>
+    <h4>Currently Viewing {{ header }}</h4>
+    <br>
+  </div>
+
+  <table class="table table-hover">
+    <thead>
+      {% if header|lower == "studentinfo" %}
+      <tr>
+        <th>Roll NO</th>
+        <th>Name</th>
+        <th>Class</th>
+        <th>School</th>
+        <th>Mobile</th>
+        <th>Address</th>
+      </tr>
+      {% else %}
+      <tr>
+        <th>Name</th>
+        <th>maths</th>
+        <th>Physics</th>
+        <th>Chemistry</th>
+        <th>Biology</th>
+        <th>English</th>
+      </tr>
+      {% endif %}
+    </thead>
+    
+    <tbody>
+      
+      {% for item in items %}
+      {% if header|lower == "studentinfo" %}
+      <tr>
+        <td>{{ item.roll_no }}
+        {% if request.user.is_authenticated %}
+          <td><a href="{% url 'student_academics' item.pk %}">{{ item.name }}</a></td>
+        {% else %}
+          <td>{{ item.name }}</td>
+        {% endif %}
+        <td>{{ item.class_name }} </td>
+        <td>{{ item.school }}</td>
+        <td>{{ item.mobile }}</td>
+        <td>{{ item.address }}</td>
+      {% else %}
+        <td>{{ std_info.name }}({{ std_info.roll_no }})</td>
+        <td>{{ item.maths }}</td>
+        <td>{{ item.physics }} </td>
+        <td>{{ item.chemistry }}</td>
+        <td>{{ item.biology }}</td>
+        <td>{{ item.english }}</td>
+      {% endif %}
+      
+      {% if request.user.is_authenticated %}
+      {% if header|lower == "studentinfo" %}
+      <td>
+          <a href="{% url 'edit_student' item.pk %}" class="btn btn-warning btn-sm" role="button" aria-pressed="true" > Edit</a>
+          <a href="{% url 'delete_student' item.pk%}" class="btn btn-danger btn-sm" role="button" aria-pressed="true" > x</a>
+      </td>
+      {% elif header|lower == "studentacademics" %}
+      <td>
+          <a href="{% url 'edit_academics' item.pk %}" class="btn btn-warning btn-sm" role="button" aria-pressed="true" > Edit</a>
+          <a href="{% url 'delete_academics' item.pk%}" class="btn btn-danger btn-sm" role="button" aria-pressed="true" > x</a>
+      </td>
+      {% endif %}
+      {% endif %}
+
+      </tr>
+
+      {% endfor %}
+  
+    </tbody>
+  </table>
+
+{% endblock %}
